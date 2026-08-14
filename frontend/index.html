@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudSage — GenAI Cloud Operations & Knowledge Assistant</title>
+  <meta name="description" content="Clean, minimal cloud operations dashboard, real AWS telemetry explorer, and RAG cloud knowledge assistant with INR localization.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header / Navigation Bar -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            <path d="m12 13 2 2 4-4"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">CloudSage</h1>
+          <span class="brand-subtitle">GenAI Cloud Operations & Knowledge Assistant</span>
+        </div>
+      </div>
+
+      <!-- Compact Status Row -->
+      <div class="header-status-row">
+        <!-- Backend API Health -->
+        <div id="backend-status-badge" class="status-pill badge-pending">
+          <span class="status-dot"></span>
+          <span id="backend-status-text">Checking API...</span>
+        </div>
+
+        <!-- AWS Connection Status -->
+        <div id="aws-status-badge" class="status-pill badge-pending">
+          <span class="status-dot"></span>
+          <span id="aws-status-text">Checking AWS...</span>
+        </div>
+
+        <!-- AI Agent Pill -->
+        <div class="status-pill pill-info">
+          <span class="status-dot"></span>
+          <span>AI Agent · Active</span>
+        </div>
+
+        <!-- RAG Knowledge Engine Pill -->
+        <div class="status-pill pill-knowledge">
+          <span class="status-dot"></span>
+          <span>RAG Knowledge · Active</span>
+        </div>
+
+        <!-- Environment Mode -->
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>Mode: Mock (Safe Dev)</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- CloudSage AI Assistant Section (Main Central Focus) -->
+      <section class="ai-assistant-card" id="ai-assistant-card">
+        <div class="ai-card-header">
+          <div class="ai-title-group">
+            <div class="ai-logo-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div>
+              <div class="ai-heading-row">
+                <h2 class="ai-card-title">CloudSage AI Assistant</h2>
+                <span class="ai-badge-live">Tool-Calling · RAG · INR (₹)</span>
+              </div>
+              <p class="ai-card-desc">Ask operational cloud telemetry or AWS architecture questions. CloudSage invokes read-only tools, searches official AWS documentation, and displays spending in INR (₹).</p>
+            </div>
+          </div>
+
+          <div class="ai-header-actions">
+            <button id="btn-reset-chat" class="btn btn-secondary" title="Reset conversation session">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                <path d="M21 3v5h-5"/>
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                <path d="M3 21v-5h5"/>
+              </svg>
+              <span>New Session</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Prompts Pill Buttons -->
+        <div class="example-prompts-container">
+          <span class="example-prompts-label">Quick Prompts:</span>
+          <div class="example-chips-list">
+            <button class="chip-prompt" data-prompt="What EC2 instances are running?">
+              <span>🖥️ Running EC2 Instances</span>
+            </button>
+            <button class="chip-prompt" data-prompt="Show me my S3 buckets.">
+              <span>🪣 S3 Buckets</span>
+            </button>
+            <button class="chip-prompt" data-prompt="How much am I spending on AWS and which service costs the most?">
+              <span>💰 AWS Spend</span>
+            </button>
+            <button class="chip-prompt chip-rag" data-prompt="What is an EC2 security group?">
+              <span>🛡️ EC2 Security Groups</span>
+            </button>
+            <button class="chip-prompt chip-rag" data-prompt="Explain AWS IAM least privilege.">
+              <span>🔐 IAM Least Privilege</span>
+            </button>
+            <button class="chip-prompt chip-rag" data-prompt="What are S3 storage classes?">
+              <span>📦 S3 Storage Classes</span>
+            </button>
+            <button class="chip-prompt chip-rag" data-prompt="How does CloudWatch monitoring work?">
+              <span>📈 CloudWatch Concepts</span>
+            </button>
+            <button class="chip-prompt chip-rag" data-prompt="What are common causes of high EC2 CPU usage?">
+              <span>🔥 High CPU Causes</span>
+            </button>
+            <button class="chip-prompt chip-hybrid" data-prompt="Analyze my AWS costs and explain how I could reduce them.">
+              <span>💡 Cost Optimization</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Conversation Chat Stream -->
+        <div class="chat-stream" id="chat-stream">
+          <!-- Initial AI Welcome Message -->
+          <div class="chat-message message-ai">
+            <div class="message-avatar">
+              <div class="avatar-icon ai-avatar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+            </div>
+            <div class="message-body">
+              <div class="message-header">
+                <span class="message-sender">CloudSage AI</span>
+                <span class="message-time">Assistant</span>
+              </div>
+              <div class="message-content">
+                <p>Hello! I am <strong>CloudSage</strong>, your GenAI Cloud Operations & Knowledge Assistant.</p>
+                <p>I can inspect your AWS infrastructure (EC2, S3, CloudWatch, Cost Explorer in <strong>₹ INR</strong>), answer architecture and security questions grounded in official AWS documentation, and provide actionable cost optimization guidance.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form class="chat-input-form" id="chat-form">
+          <div class="chat-input-wrapper">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Ask CloudSage anything (e.g. 'What EC2 instances are running?' or 'Analyze my AWS costs')..." autocomplete="off" />
+            <button type="submit" id="btn-chat-send" class="btn-chat-send" title="Send message">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" x2="11" y1="2" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              <span>Send</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Compact AWS Connection Card -->
+      <section class="aws-connection-card" id="aws-connection-card">
+        <div class="aws-card-header">
+          <div class="aws-title-group">
+            <div class="aws-logo-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                <path d="m12 13 2 2 4-4"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="aws-card-title">AWS Environment Connection</h2>
+              <p class="aws-card-desc" id="aws-connection-message">Inspecting local AWS credentials and STS identity...</p>
+            </div>
+          </div>
+
+          <div class="aws-actions">
+            <button id="btn-refresh-aws" class="btn btn-secondary" title="Test AWS connection via STS">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 21h5v-5"/>
+              </svg>
+              <span>Test Connection</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="aws-telemetry-grid">
+          <div class="telemetry-box">
+            <span class="telemetry-label">Status</span>
+            <span class="telemetry-value" id="aws-val-status">Connecting...</span>
+          </div>
+          <div class="telemetry-box">
+            <span class="telemetry-label">Region</span>
+            <span class="telemetry-value font-mono" id="aws-val-region">us-east-1</span>
+          </div>
+          <div class="telemetry-box">
+            <span class="telemetry-label">Account ID</span>
+            <span class="telemetry-value font-mono" id="aws-val-account">None</span>
+          </div>
+          <div class="telemetry-box">
+            <span class="telemetry-label">Mode</span>
+            <span class="telemetry-value" id="aws-val-authmode">Mock (Safe Dev)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Compact AWS Operational Tools Section -->
+      <section class="tools-section">
+        <div class="section-header">
+          <h2 class="section-title">AWS Operational Tools</h2>
+          <span class="section-subtitle">Direct read-only Boto3 tools for manual telemetry inspection</span>
+        </div>
+
+        <div class="tools-tab-grid">
+          <!-- EC2 Inspector -->
+          <div class="tool-card">
+            <div class="tool-card-head">
+              <div class="tool-card-info">
+                <div class="tool-icon icon-ec2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="8" x="2" y="2" rx="2" ry="2"/>
+                    <rect width="20" height="8" x="2" y="14" rx="2" ry="2"/>
+                    <line x1="6" x2="6.01" y1="6" y2="6"/>
+                    <line x1="6" x2="6.01" y1="18" y2="18"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="tool-heading">EC2 Inspector</h3>
+                  <span class="tool-endpoint">GET /api/aws/ec2/instances</span>
+                </div>
+              </div>
+              <button id="btn-fetch-ec2" class="btn btn-primary">
+                <span>Inspect</span>
+              </button>
+            </div>
+            <p class="tool-card-desc">Lists instances with ID, state, type, AZ, and IP addresses.</p>
+            <div id="ec2-summary-bar" class="mini-summary-bar hidden">
+              <span id="ec2-count-badge" class="count-pill">0 instances</span>
+              <span id="ec2-region-badge" class="region-pill">--</span>
+            </div>
+          </div>
+
+          <!-- S3 Explorer -->
+          <div class="tool-card">
+            <div class="tool-card-head">
+              <div class="tool-card-info">
+                <div class="tool-icon icon-s3">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" x2="12" y1="22.08" y2="12"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="tool-heading">S3 Explorer</h3>
+                  <span class="tool-endpoint">GET /api/aws/s3/buckets</span>
+                </div>
+              </div>
+              <button id="btn-fetch-s3" class="btn btn-primary">
+                <span>Explore</span>
+              </button>
+            </div>
+            <p class="tool-card-desc">Lists account S3 storage buckets with creation dates.</p>
+            <div id="s3-summary-bar" class="mini-summary-bar hidden">
+              <span id="s3-count-badge" class="count-pill">0 buckets</span>
+            </div>
+          </div>
+
+          <!-- CloudWatch Telemetry -->
+          <div class="tool-card">
+            <div class="tool-card-head">
+              <div class="tool-card-info">
+                <div class="tool-icon icon-cw">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="tool-heading">CloudWatch</h3>
+                  <span class="tool-endpoint">GET /api/aws/cloudwatch/...</span>
+                </div>
+              </div>
+              <button id="btn-fetch-cw" class="btn btn-primary">
+                <span>Query CPU</span>
+              </button>
+            </div>
+            <div class="tool-input-row">
+              <input type="text" id="cw-instance-id" placeholder="Instance ID (e.g. i-03fa78bc)" class="input-text">
+              <select id="cw-hours" class="select-box">
+                <option value="1">1h</option>
+                <option value="6">6h</option>
+                <option value="24">24h</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Cost Intelligence -->
+          <div class="tool-card">
+            <div class="tool-card-head">
+              <div class="tool-card-info">
+                <div class="tool-icon icon-cost">
+                  <span style="font-weight:700; font-size:1rem;">₹</span>
+                </div>
+                <div>
+                  <h3 class="tool-heading">Cost Intelligence</h3>
+                  <span class="tool-endpoint">GET /api/aws/cost/summary</span>
+                </div>
+              </div>
+              <button id="btn-fetch-cost" class="btn btn-primary">
+                <span>Analyze Spend</span>
+              </button>
+            </div>
+            <div class="tool-input-row">
+              <span class="input-label">Period:</span>
+              <select id="cost-days" class="select-box" style="flex:1;">
+                <option value="7">Last 7 Days</option>
+                <option value="30" selected>Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Operational Results Viewer -->
+      <section class="results-card" id="results-card">
+        <div class="results-header">
+          <div class="results-title-group">
+            <div class="results-status-dot" id="results-status-dot"></div>
+            <h3 class="results-title" id="results-title">Operational Results Viewer</h3>
+            <span class="results-badge" id="results-badge">Awaiting Query</span>
+          </div>
+
+          <div class="results-controls">
+            <button id="btn-view-table" class="btn btn-toggle active">Table View</button>
+            <button id="btn-view-json" class="btn btn-toggle">Raw JSON</button>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="results-view-rendered" class="results-content-rendered">
+          <div class="empty-state" id="empty-state">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            <p>Select any tool above (EC2, S3, CloudWatch, or Cost Intelligence) to test live data retrieval.</p>
+          </div>
+          <div id="rendered-data-container" class="data-container hidden"></div>
+        </div>
+
+        <!-- Raw JSON View -->
+        <div id="results-view-raw" class="results-content-raw hidden">
+          <pre><code id="results-raw-json" class="json-code">{ "status": "no query executed yet" }</code></pre>
+        </div>
+      </section>
+
+      <!-- Diagnostic & Links Row -->
+      <div class="grid-2col">
+        <!-- Architecture Pipeline Card -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="card-icon icon-arch">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="18" x="3" y="3" rx="2"/>
+                  <path d="M3 9h18"/>
+                  <path d="M9 21V9"/>
+                </svg>
+              </div>
+              <h3 class="card-title">Architecture Pipeline</h3>
+            </div>
+            <span class="phase-tag">Production Ready</span>
+          </div>
+
+          <div class="pipeline-flow">
+            <div class="pipeline-step">
+              <div class="step-num">1</div>
+              <div class="step-details">
+                <span class="step-title">Modern Light Web UI</span>
+                <span class="step-sub">Light SaaS Theme · Clean Cards · INR (₹) Formatting</span>
+              </div>
+              <span class="step-status status-ready">Ready</span>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step">
+              <div class="step-num">2</div>
+              <div class="step-details">
+                <span class="step-title">FastAPI Backend & Health API</span>
+                <span class="step-sub">/health, /api/aws, /api/chat, Pydantic</span>
+              </div>
+              <span class="step-status status-ready">Ready</span>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step">
+              <div class="step-num">3</div>
+              <div class="step-details">
+                <span class="step-title">AWS Tool Modules (Read-Only)</span>
+                <span class="step-sub">EC2, S3, CloudWatch, Cost Explorer</span>
+              </div>
+              <span class="step-status status-ready">Ready</span>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step">
+              <div class="step-num">4</div>
+              <div class="step-details">
+                <span class="step-title">GenAI Agent & Tool Calling</span>
+                <span class="step-sub">Autonomous Tool Routing, Multi-Turn Memory</span>
+              </div>
+              <span class="step-status status-ready">Ready</span>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step">
+              <div class="step-num">5</div>
+              <div class="step-details">
+                <span class="step-title">RAG Knowledge Engine & INR Currency</span>
+                <span class="step-sub">Vector Store, Source Citations, INR Localization</span>
+              </div>
+              <span class="step-status status-ready">Ready</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Developer Endpoints & API Docs -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="card-icon icon-dev">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
+              <h3 class="card-title">Developer Endpoints & API Docs</h3>
+            </div>
+          </div>
+
+          <div class="links-list">
+            <a href="/api/chat" target="_blank" class="link-card">
+              <div class="link-info">
+                <span class="link-name">GenAI Chat & RAG API (POST)</span>
+                <span class="link-url">/api/chat</span>
+              </div>
+              <span class="link-action">Open →</span>
+            </a>
+
+            <a href="/api/rag/search?q=security%20group" target="_blank" class="link-card">
+              <div class="link-info">
+                <span class="link-name">RAG Knowledge Search API (GET)</span>
+                <span class="link-url">/api/rag/search?q=security+group</span>
+              </div>
+              <span class="link-action">Open →</span>
+            </a>
+
+            <a href="/api/aws/status" target="_blank" class="link-card">
+              <div class="link-info">
+                <span class="link-name">AWS Status API</span>
+                <span class="link-url">/api/aws/status</span>
+              </div>
+              <span class="link-action">Open →</span>
+            </a>
+
+            <a href="/api/aws/cost/summary" target="_blank" class="link-card">
+              <div class="link-info">
+                <span class="link-name">Cost Summary API</span>
+                <span class="link-url">/api/aws/cost/summary</span>
+              </div>
+              <span class="link-action">Open →</span>
+            </a>
+
+            <a href="/docs" target="_blank" class="link-card">
+              <div class="link-info">
+                <span class="link-name">Interactive Swagger OpenAPI</span>
+                <span class="link-url">/docs</span>
+              </div>
+              <span class="link-action">Open →</span>
+            </a>
+          </div>
+
+          <div class="security-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span><strong>Zero Secrets Exposed:</strong> Strictly read-only operations. AWS credentials never cross the local API boundary.</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <span>CloudSage Portfolio Project &bull; Powered by FastAPI, AWS Boto3, GenAI Agent & RAG</span>
+        <span>INR Currency Localization (₹) · Light SaaS UI</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
