@@ -1,4 +1,4 @@
-# CloudSage — GenAI-Powered Cloud Operations & Cost Intelligence Assistant
+# CloudSage — GenAI-Powered Cloud Operation & Cost Intelligence Assistant
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)
@@ -35,7 +35,7 @@
 
 ## Overview
 
-CloudSage acts as an intelligent site reliability engineer and FinOps copilot directly on your local machine. Instead of navigating the complex AWS Management Console or writing one-off CLI commands, users can ask natural language questions and receive accurate, context-aware answers backed by actual AWS telemetry.
+CloudSage acts as an intelligent site reliability engineer and FinOps copilot directly on your local systems. Instead of navigating the complex AWS Management Console or writing one-off CLI commands, users can ask natural language questions and receive accurate, context-aware answers backed by actual AWS telemetry.
 
 ### Example Queries CloudSage Answers:
 * *"What EC2 instances are currently running?"*
