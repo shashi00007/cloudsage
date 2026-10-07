@@ -531,12 +531,3 @@ Computer Science (AI & Machine Learning)
 Sahyadri College of Engineering and Management
 ```
 
-### One important thing before you paste it
-
-I intentionally changed the wording around **Claude**. Your current GitHub repository actually lists **OpenAI, Gemini, and a local reasoning engine** as the implemented providers. :chatgpt-content-reference{index="2"}
-
-So don't put **“Claude-powered”** in the README unless you've actually added a Claude provider to the code.
-
-However, your **resume says Claude and Claude Code are primary tools**, so if the interviewer asks about that, we need to prepare a clean, truthful explanation of exactly what you did. :chatgpt-content-reference{index="3"}
-
-**This README will make the repo look much more professional without creating technical claims that the interviewer can catch you on.**
