@@ -1,10 +1,6 @@
-Yes. I checked the **current actual README and repo**, and I’d replace the existing README with a cleaner, more interview-friendly version. Your current README is very detailed but a little too long and documentation-heavy for someone quickly evaluating your project. [GitHub](https://github.com/shashi00007/cloudsage)
 
-**Important:** I am deliberately **not claiming Claude or MCP are implemented in the current repo**, because the actual code/documentation currently shows OpenAI, Gemini, and a local reasoning engine, plus AWS tool calling and RAG. [GitHub](https://github.com/shashi00007/cloudsage)
 
-Copy **everything below** into `README.md`:
-
-```markdown
+```markdo
 # ☁️ CloudSage — GenAI Cloud Operations Assistant
 
 > A natural-language AI assistant for AWS cloud operations, monitoring, and cost intelligence.
